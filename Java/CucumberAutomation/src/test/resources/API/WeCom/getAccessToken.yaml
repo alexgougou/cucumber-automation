@@ -1,0 +1,7 @@
+Path: cgi-bin/gettoken
+Method: Get
+Headers:
+  Content-Type: "application/json; charset=UTF-8"
+Params:
+  corpid: ""
+  corpsecret: ""

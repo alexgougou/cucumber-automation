@@ -1,0 +1,11 @@
+Step1:
+  API: testAPI001
+  replace:
+    user: alex
+    password: 12345678
+#   extract:
+#     Token: token
+Step2:
+  API: testAPI002
+
+

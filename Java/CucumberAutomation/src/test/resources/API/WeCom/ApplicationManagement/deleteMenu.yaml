@@ -1,0 +1,7 @@
+Path: cgi-bin/menu/delete
+Method: Get
+Headers:
+  Content-Type: "application/json; charset=UTF-8"
+Params:
+  access_token: ""
+  agentid: ""
