@@ -1,7 +1,7 @@
 #*****************************************************公共参数*****************************************************#
 PublicParams:
-  corpid1: "wwba399d9b250fee36"
-  corpsecret1: "HENIWYc4NWtrhLQAvmsTxYPIdTIKObvH2V5Oj7pFSfU"
+  corpid1: "123"
+  corpsecret1: "123"
   agentid1: "1000002"
   name1: "百度一下"
   name2: "赞！！！"
