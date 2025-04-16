@@ -1,13 +1,13 @@
 #*****************************************************数据库参数*****************************************************#
 testDB:
-  url: "jdbc:mysql://localhost:3306/test"
+  address: "localhost:3306/test"    ####jdbc:mysql://localhost:3306/test
   DBType: "mysql"
   userName: "root"
-  password: "root"
+  password: "12345678"
 testDB2:
-  url: "jdbc:oracle:thin:@//localhost:3306/"  ##1：jdbc:oracle:thin:@//localhost:3306/orcl(以serviceName方式)， 2:jdbc:oracle:thin:@localhost:3306:sid(sid方式)
+  address: "localhost:3306"  ##1：jdbc:oracle:thin:@//localhost:3306/orcl(以serviceName方式)， 2:jdbc:oracle:thin:@localhost:3306:sid(sid方式)
   serviceName: "orcl"
-  SID: "orcl"
+#  SID: "orcl"
   DBType: "oracle"
   userName: "root"
   password: "root"

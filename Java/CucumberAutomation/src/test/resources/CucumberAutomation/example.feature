@@ -2,12 +2,10 @@
 Feature: An demo api test example
 
   @test001 @CASE_INFO(demoTest001)
-  Scenario: Run the api test
+  Scenario: Run the database DML
     Given initial the user data<"name, mobile">, and save<"1-1">
-    When execute the common http request<"getAccessToken">"获取accessToken"<"2-1">
-    Then verify the http response<"getAccessToken">"http数据校验"<"2-2">
-    When execute the common http request<"createMenu">"获取accessToken"<"3-1">
-    Then verify the http response<"createMenu">"http数据校验"<"3-2">
+    Then connect DB to execute SQL<"queryStudent">"数据库数据校验"<"1-2">
+    Then connect DB to execute SQL<"updateStudent">"数据库数据校验"<"1-3">
 
   @test002 @CASE_INFO(demoTest002)
   Scenario: Run the api test

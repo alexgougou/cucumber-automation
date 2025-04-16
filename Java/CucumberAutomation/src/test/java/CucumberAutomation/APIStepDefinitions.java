@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static Core.DBStepHandler.*;
 import static Core.HttpHandler.*;
 import static Core.StepData.*;
 
@@ -58,6 +59,18 @@ public class APIStepDefinitions
     {
         getStepStatus(stepIndex);
         verifyHttpResult();
+    }
+
+    @Then("connect DB to execute SQL<{string}>{string}<{string}>")
+    public void DBVerify(String stepName, String stepIntro, String stepIndex)
+    {
+        getStepStatus(stepIndex);
+        DBStepInit(stepName);
+        DBInit();
+        replaceSQLParams();
+        executeDBDML();
+        verifyDBResult();
+
     }
 
 

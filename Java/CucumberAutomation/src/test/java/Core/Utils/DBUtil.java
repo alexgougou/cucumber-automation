@@ -25,7 +25,7 @@ public class DBUtil
      * @return
      * @throws SQLException
      */
-    public static Connection getConnection(String url, String userName, String password) throws SQLException
+    public static Connection getConnection(String url, String userName, String password)
     {
         DruidDataSource dataSource = new DruidDataSource();
         dataSource.setUrl(url);
@@ -65,35 +65,6 @@ public class DBUtil
         }
     }
 
-    /***
-     * 不区分查询还是修改语句
-     * @param connection
-     * @param SQL
-     */
-    public static void executeSQL(Connection connection, String SQL)
-    {
-        boolean isResultSet = false;
-        try
-        {
-            Statement stmt = connection.createStatement();
-            isResultSet = stmt.execute(SQL);
-            if (isResultSet)
-            {
-                ResultSet rs = stmt.getResultSet();
-                System.out.println(rs);
-            }
-            else
-            {
-                int updateNum = stmt.getUpdateCount();
-                System.out.println(updateNum);
-            }
-        }
-        catch (SQLException e)
-        {
-            throw new RuntimeException(e);
-        }
-
-    }
 
     /***
      * execute query

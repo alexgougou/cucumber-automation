@@ -7,8 +7,10 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.util.Map;
 
+import static Core.StepData.stepInfo;
 import static Core.Utils.Config.envPath;
 import static Core.Utils.JsonUtil.getMapValueByLowerCase;
+import static Core.Utils.YamlUtil.getYamlMap;
 
 public class EnvData
 {
@@ -18,21 +20,14 @@ public class EnvData
     public static Map<String, Object> ServerInfo;
 
     public static String serverAddress;
-    public static String envInfo;
+    public static Map<String, Object> envInfo;
 
     private EnvData()
     {
-        try
-        {
-            logger.info("Start to get Env Info");
-            envInfo = YamlTool.convertYamlToJson(envPath);
-            getServerInfo();
-            getServerAddress();
-        }
-        catch (IOException e)
-        {
-            logger.error("get Env Info failed: ", e);
-        }
+        logger.info("Start to get Env Info");
+        envInfo = getYamlMap(envPath);
+        getServerInfo();
+        getServerAddress();
     }
 
     private volatile static EnvData instance;
@@ -53,7 +48,10 @@ public class EnvData
     }
 
     public Map<String, Object> getServerInfo() {
-        ServerInfo = getMapValueByLowerCase(envInfo, "$.server");
+        if (envInfo.containsKey("Server"))
+        {
+            ServerInfo = (Map<String, Object>) envInfo.get("Server");
+        }
         return ServerInfo;
     }
 

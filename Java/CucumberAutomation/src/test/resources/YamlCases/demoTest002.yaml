@@ -1,11 +1,14 @@
 #*****************************************************公共参数*****************************************************#
 PublicParams:
-  corpid1: "123"
-  corpsecret1: "333"
+  corpid1: "wwba399d9b250fee36"
+  corpsecret1: "HENIWYc4NWtrhLQAvmsTxYPIdTIKObvH2V5Oj7pFSfU"
   agentid1: "1000002"
   name1: "百度一下"
   name2: "赞！！！"
   url1: "http://www.baidu.com/"
+  studentName1: "赵四"
+  studentID1: 01
+
 #*****************************************************getAccessToken*****************************************************#
 getAccessToken:
   APIFile: WeCom/getAccessToken

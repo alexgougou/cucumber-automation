@@ -5,6 +5,8 @@ import Core.Utils.RegexUtil;
 import io.cucumber.java.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.junit.jupiter.api.Assertions;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -20,7 +22,7 @@ public class Hooks
     public static ArrayList<Status> stepStatus;
 
     public static LinkedHashMap<String, Object> scenarioData;
-    public static Map<String, String> publicParams;
+    public static Map<String, Object> publicParams;
     private static final Logger logger = LogManager.getLogger(Hooks.class);
 
     /***
@@ -40,11 +42,11 @@ public class Hooks
         }
     }
 
-    public Map<String, String> getPublicParams()
+    public Map<String, Object> getPublicParams()
     {
         if (scenarioData.containsKey("PublicParams"))
         {
-            publicParams = (Map<String, String>) scenarioData.get("PublicParams");
+            publicParams = (Map<String, Object>) scenarioData.get("PublicParams");
         }
         return publicParams;
     }
@@ -100,10 +102,13 @@ public class Hooks
     @AfterStep
     public void afterStep()
     {
-        if (scenario.isFailed()) {
-            stepStatus.add(Status.FAILED);
+        if (stepStatus.size()>1 && stepStatus.get(stepStatus.size() - 1) == Status.FAILED)
+        {
+            logger.info("last step is failed, skip following steps");
+            Assertions.assertTrue(false);
         }
-        else {
+        else
+        {
             stepStatus.add(Status.PASSED);
         }
     }

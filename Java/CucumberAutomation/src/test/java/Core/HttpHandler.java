@@ -177,7 +177,7 @@ public class HttpHandler
 
     /***
      *
-     * @param urlParams
+     * @param
      */
 
     public static void replaceUrlParams()
@@ -325,9 +325,9 @@ public class HttpHandler
 
     public static void verifyHttpResult()
     {
-        logger.info("start to verify http result");
         if (verifyData != null)
         {
+            logger.info("start to verify http result");
             for (Map.Entry<String, Object> entry : verifyData.entrySet())
             {
                 String key = entry.getKey();

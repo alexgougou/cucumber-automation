@@ -3,14 +3,18 @@ package Core;
 import io.cucumber.java.Status;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.junit.jupiter.api.Assertions;
+
 import java.util.Map;
-import static CucumberAutomation.Hooks.scenarioData;
-import static CucumberAutomation.Hooks.stepStatus;
+
+import static CucumberAutomation.Hooks.*;
 
 
 public class StepData
 {
     public static Map<String, Object> stepInfo;
+    public static String DBName;
+
 
     public static Map<String, Object> needReplacedParams;    //caseInfo 中replaceParams下的参数
 
@@ -18,6 +22,8 @@ public class StepData
 
     public static Map<String, Object> saveData;    //caseInfo 中SaveData下的参数
     public static Map<String, Object> verifyData;   //caseInfo 中Verify下的参数
+    public static String SQLStatement;   //caseInfo 中sql
+    public static Map<String, Object> SQLParams;   //caseInfo 中SQLParams
 
 
     private static final Logger logger = LogManager.getLogger(StepData.class);
@@ -31,15 +37,31 @@ public class StepData
         }
     }
 
+    public static void setStepFailed()
+    {
+        stepStatus.add(Status.FAILED);
+    }
+
     public static Map<String, Object> getStepInfo(String stepName)
     {
         if (scenarioData.containsKey(stepName))
         {
             stepInfo = (Map<String, Object>) scenarioData.get(stepName);
-        } else {
+        }
+        else
+        {
             logger.error("step not exist!!!");
         }
         return stepInfo;
+    }
+
+    public static String getDBName()
+    {
+        if (stepInfo.containsKey("DBName"))
+        {
+            DBName = (String) stepInfo.get("DBName");
+        }
+        return DBName;
     }
 
     public static String getAPIFilePath(Map<String, Object> stepInfo)
@@ -76,6 +98,26 @@ public class StepData
         return needReplacedUrlParams;
     }
 
+    public static String getSQLStatement()
+    {
+
+        if (stepInfo.containsKey("SQL"))
+        {
+            SQLStatement = (String) stepInfo.get("SQL");
+        }
+        return SQLStatement;
+    }
+
+    public static Map<String, Object> getSQLParams()
+    {
+
+        if (stepInfo.containsKey("SQLParams"))
+        {
+            SQLParams = (Map<String, Object>) stepInfo.get("SQLParams");
+        }
+        return SQLParams;
+    }
+
     public static Map<String, Object> getSaveData()
     {
 
@@ -108,5 +150,15 @@ public class StepData
         getReplaceParams();
         getReplaceUrlParams();
 
+    }
+
+    public static void DBStepInit(String stepName)
+    {
+        stepInfo = getStepInfo(stepName);
+        getDBName();
+        getSQLParams();
+        getSQLStatement();
+        getSaveData();
+        getVerifyData();
     }
 }

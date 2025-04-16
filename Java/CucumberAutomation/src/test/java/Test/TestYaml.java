@@ -87,6 +87,7 @@ public class TestYaml
         Connection con = DBUtil.getConnection(uri, dbName, dbPass);
         String sql1 = "Select * from Student;";
         List<Map<String, Object>> resultList = DBUtil.executeQuery(con,sql1);
+        System.out.println(resultList.isEmpty());
         resultList.forEach(System.out::println);
         Connection con2 = DBUtil.getConnection(uri, dbName, dbPass);
 
