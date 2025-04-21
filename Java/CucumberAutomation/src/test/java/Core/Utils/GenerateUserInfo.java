@@ -10,8 +10,8 @@ public class GenerateUserInfo
     private static final String[] AREA_CODES = {
             "110000", "120000", "130000", "140000", "150000", "210000", "220000", "230000", "310000", "320000",
             "330000", "340000", "350000", "360000", "370000", "410000", "420000", "430000", "440000", "450000",
-            "460000", "500000", "510000", "520000", "530000", "540000", "610000", "620000", "630000", "640000",
-            "65" // 省略了部分地区码以示例
+            "460000", "500000", "510000", "520000", "530000", "540000", "610000", "620000", "630000", "640000"
+            // 省略了部分地区码以示例
     };
     private static final int[] WEIGHTS = {7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2}; // 加权因子
     private static final char[] CHECK_CODES = {'1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2'}; // 校验码映射表
@@ -26,7 +26,6 @@ public class GenerateUserInfo
      *
      * @param min 最小值
      * @param max 最大值
-     * @return
      */
     public static int genInteger(Integer min, Integer max)
     {
@@ -37,7 +36,6 @@ public class GenerateUserInfo
     /**
      * 随机生成一个常见的汉字字符
      *
-     * @return
      */
     private static char genRandomChineseChar()
     {
@@ -68,82 +66,80 @@ public class GenerateUserInfo
      *
      * @param type 类型
      * @param len  长度
-     * @return
      */
     public static String genString(Integer type, Integer len)
     {
-        String res = "";
+        StringBuilder res = new StringBuilder();
         switch (type)
         {
             case 1:
                 for (int i = 0; i < len; i++)
                 {
-                    res += genInteger(0, 9);
+                    res.append(genInteger(0, 9));
                 }
                 break;
             case 2:
                 for (int i = 0; i < len; i++)
                 {
-                    int min = (int) 'a';
-                    int max = (int) 'z';
+                    int min = 'a';
+                    int max = 'z';
                     int tmp = genInteger(min, max);
-                    res += (char) tmp;
+                    res.append((char) tmp);
                 }
                 break;
             case 3:
                 for (int i = 0; i < len; i++)
                 {
-                    int min = (int) 'A';
-                    int max = (int) 'Z';
+                    int min = 'A';
+                    int max = 'Z';
                     int tmp = genInteger(min, max);
-                    res += (char) tmp;
+                    res.append((char) tmp);
                 }
                 break;
             case 4:
                 for (int i = 0; i < len; i++)
                 {
-                    int min = (int) 'A';
-                    int max = (int) 'z';
+                    int min = 'A';
+                    int max = 'z';
                     int tmp = genInteger(min, max);
                     if (tmp >= 91 && tmp <= 96)
                     {
                         i--;
                         continue;
                     }
-                    res += (char) tmp;
+                    res.append((char) tmp);
                 }
                 break;
             case 5:
                 for (int i = 0; i < len; i++)
                 {
-                    int min = (int) '0';
-                    int max = (int) 'z';
+                    int min = '0';
+                    int max = 'z';
                     int tmp = genInteger(min, max);
                     if ((tmp >= 91 && tmp <= 96) || (tmp >= 58 && tmp <= 64))
                     {
                         i--;
                         continue;
                     }
-                    res += (char) tmp;
+                    res.append((char) tmp);
                 }
                 break;
             case 6:
                 for (int i = 0; i < len; i++)
                 {
-                    res += genRandomChineseChar();
+                    res.append(genRandomChineseChar());
                 }
                 break;
 
             default:
                 throw new RuntimeException("类型不正确");
         }
-        return res;
+        return res.toString();
     }
 
     /**
      * 生成长度随机的邮箱
      *
-     * @return
      */
     public static String genEmail()
     {
@@ -158,19 +154,16 @@ public class GenerateUserInfo
     /**
      * 随机生成电话号码
      *
-     * @return
      */
     public static String genPhoneNum()
     {
         String[] prefix = {"132", "133", "134", "135", "136", "138", "139", "152", "154", "155", "177", "188"};
         int index = genInteger(0, prefix.length - 1);
-        String res = prefix[index] + genString(1, 8);
-        return res;
+        return prefix[index] + genString(1, 8);
     }
 
     /***
      * 生成性别
-     * @return
      */
     public static String genSex()
     {
@@ -180,9 +173,8 @@ public class GenerateUserInfo
 
 
     /**
-     * 随机生成中文名字
+     * 根据性别生成中文名字
      *
-     * @return
      */
     public static String genChineseName(String sex)
     {
@@ -199,7 +191,7 @@ public class GenerateUserInfo
             }
             else
             {
-                name = name + girl.substring(j, j + 1);
+                name = name + girl.charAt(j);
             }
         }
         else
@@ -211,28 +203,36 @@ public class GenerateUserInfo
             }
             else
             {
-                name = name + boy.substring(j, j + 1);
+                name = name + boy.charAt(j);
             }
 
         }
         return name;
     }
 
-
+    /***
+     * 根据年龄范围和性别生成身份证号码
+     * @param minAge 最小年龄
+     * @param maxAge  最大年龄
+     * @param sex 性别
+     */
     public static String generateIDCard(int minAge, int maxAge, String sex)
     {
-        boolean isMale = sex.equals("男") ? true : false;
         int randomAge = new Random().nextInt((maxAge - minAge) + 1) + minAge;
         LocalDate birthDate = generateRandomBirthDate(randomAge);
         String birthDateStr = birthDate.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        int sequenceCode = isMale ? generateMaleSequenceCode() : generateFemaleSequenceCode();
+        String sequenceCode = generateSequence(sex);
         int randomAreaCodeIndex = new Random().nextInt(AREA_CODES.length);
         String randomAreaCode = AREA_CODES[randomAreaCodeIndex];
-        String basePart = randomAreaCode + birthDateStr + String.format("%03d", sequenceCode); // 前17位数字部分
+        String basePart = randomAreaCode + birthDateStr + sequenceCode; // 前17位数字部分
         char checkCode = calculateCheckCode(basePart); // 校验码
         return basePart + checkCode; // 完整的身份证号
     }
 
+    /***
+     * 根据年龄生成生日日期
+     * @param age 年龄
+     */
     private static LocalDate generateRandomBirthDate(int age)
     {
         // 获取当前日期
@@ -255,18 +255,26 @@ public class GenerateUserInfo
 
     }
 
-    private static int generateMaleSequenceCode()
-    {
+    // 生成顺序码和性别码
+    public static String generateSequence(String gender) {
         Random random = new Random();
-        return random.nextInt(900) + 1; // 生成101到999之间的奇数，代表男性
+        // 生成前两位随机数
+        int first = random.nextInt(10);
+        int second = random.nextInt(10);
+
+        // 生成性别码
+        int genderCode = random.nextInt(5) * 2; // 生成偶数
+        if ("男".equals(gender)) {
+            genderCode += 1; // 转换为奇数
+        }
+
+        return String.format("%d%d%d", first, second, genderCode);
     }
 
-    private static int generateFemaleSequenceCode()
-    {
-        Random random = new Random();
-        return random.nextInt(998) + 2; // 生成102到999之间的偶数，代表女性（除去偶数的开头数字）
-    }
 
+    /***
+     * 计算身份证的校验值
+     */
     private static char calculateCheckCode(String basePart)
     {
         int sum = 0;

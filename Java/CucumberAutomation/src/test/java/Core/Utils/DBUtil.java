@@ -8,7 +8,6 @@ import org.apache.logging.log4j.Logger;
 import java.sql.*;
 import java.util.List;
 import java.util.Map;
-
 import static Core.Utils.Config.*;
 
 public class DBUtil
@@ -19,36 +18,36 @@ public class DBUtil
 
     /***
      *
-     * @param url
-     * @param userName
-     * @param password
-     * @return
-     * @throws SQLException
+     * @param url DB uri
+     * @param userName user name
+     * @param password password
      */
     public static Connection getConnection(String url, String userName, String password)
     {
-        DruidDataSource dataSource = new DruidDataSource();
-        dataSource.setUrl(url);
-        dataSource.setUsername(userName);
-        dataSource.setPassword(password);
-        dataSource.setInitialSize(DB_POOL_INITIAL_SIZE);
-        dataSource.setMaxActive(DB_POOL_MAX_ACTIVE);
-        dataSource.setMinIdle(DB_POOL_MIN_IDLE);
-        dataSource.setMaxWait(DB_POOL_MAX_WAIT);
-        try
+        try (DruidDataSource dataSource = new DruidDataSource())
         {
-            conn = dataSource.getConnection();
-            return conn;
-        }
-        catch (Exception e)
-        {
-            logger.error("connect DB failed:", e);
+            dataSource.setUrl(url);
+            dataSource.setUsername(userName);
+            dataSource.setPassword(password);
+            dataSource.setInitialSize(DB_POOL_INITIAL_SIZE);
+            dataSource.setMaxActive(DB_POOL_MAX_ACTIVE);
+            dataSource.setMinIdle(DB_POOL_MIN_IDLE);
+            dataSource.setMaxWait(DB_POOL_MAX_WAIT);
+            try
+            {
+                conn = dataSource.getConnection();
+                return conn;
+            }
+            catch (Exception e)
+            {
+                logger.error("connect DB failed:", e);
+            }
         }
         return conn;
     }
 
     /***
-     * @param con
+     * @param con db connection
      */
     public static void close(Connection con)
     {
@@ -68,9 +67,8 @@ public class DBUtil
 
     /***
      * execute query
-     * @param connection
-     * @param querySQL
-     * @throws SQLException
+     * @param connection db connection
+     * @param querySQL  query sql
      */
 
     public static List<Map<String, Object>> executeQuery(Connection connection, String querySQL)
@@ -95,8 +93,7 @@ public class DBUtil
 
     /***
      * execute update
-     * @param updateSQL
-     * @throws SQLException
+     * @param updateSQL update sql
      */
     public static int executeUpdate(Connection connection, String updateSQL)
     {

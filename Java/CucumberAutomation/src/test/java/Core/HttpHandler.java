@@ -2,7 +2,6 @@ package Core;
 
 import Core.Utils.HttpResult;
 import Core.Utils.HttpUtil;
-import Core.Utils.MongoDBUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Assertions;
@@ -99,12 +98,12 @@ public class HttpHandler
 
     public static boolean isGetMethod()
     {
-        return requestMethod.toLowerCase().equals("get");
+        return requestMethod.equalsIgnoreCase("get");
     }
 
     public static boolean isPostMethod()
     {
-        return requestMethod.toLowerCase().equals("post");
+        return requestMethod.equalsIgnoreCase("post");
     }
 
     public static Map<String, String> getRequestHeaders(LinkedHashMap<String, Object> apiInfo)
@@ -183,10 +182,8 @@ public class HttpHandler
 
 
     /***
-     *
-     * @param
+     * replace url params
      */
-
     public static void replaceUrlParams()
     {
         if (needReplacedUrlParams != null)
@@ -245,6 +242,7 @@ public class HttpHandler
                     }
                 }
                 else
+                //replace other params
                 {
                     switch (replaceSource)
                     {
@@ -269,7 +267,7 @@ public class HttpHandler
         {
             for (Map.Entry<String, Object> entry : needReplacedParams.entrySet())
             {
-                String key = entry.getKey();
+//                String key = entry.getKey();
                 ArrayList<String> valueList = (ArrayList<String>) entry.getValue();
                 String replaceSource = valueList.get(0).toLowerCase();
                 String dataSourceKey = valueList.get(1);
@@ -386,7 +384,7 @@ public class HttpHandler
             {
                 String key = entry.getKey();
 
-                if (key.toLowerCase().equals("statuscode")) //校验statusCode
+                if (key.equalsIgnoreCase("statuscode")) //校验statusCode
                 {
                     Object expectedValue = entry.getValue();
                     Assertions.assertEquals(expectedValue, httpResult.getCode());
