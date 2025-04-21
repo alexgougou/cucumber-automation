@@ -22,4 +22,4 @@ updateStudent:
   SQL: "update Student set Sname='赵四' where SID = ${studentID};"
   SaveData:
   Verify:
-    success: ["double", "1"]
+    success: ["int", "1"]

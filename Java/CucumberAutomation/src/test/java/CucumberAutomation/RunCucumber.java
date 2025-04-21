@@ -8,7 +8,7 @@ import org.junit.runner.RunWith;
 import static io.cucumber.junit.platform.engine.Constants.PLUGIN_PROPERTY_NAME;
 
 @RunWith(Cucumber.class)
-@CucumberOptions(tags = "@test001",
+@CucumberOptions(tags = "@test002",
         plugin = {"html:target/cucumber-reports/cucumber.html",
         "json:target/cucumber-reports/cucumber.json",
         "junit:target/cucumber-reports/cucumber.xml",

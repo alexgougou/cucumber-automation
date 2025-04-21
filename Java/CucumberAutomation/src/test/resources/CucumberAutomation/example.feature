@@ -18,3 +18,11 @@ Feature: An demo api test example
     Then verify the http response<"getMenu">"http数据校验"<"4-2">
     When execute the common http request<"deleteMenu">"删除menu"<"5-1">
     Then verify the http response<"deleteMenu">"http数据校验"<"5-2">
+
+  @test003 @CASE_INFO(demoTest003)
+  Scenario: Test the header replace
+    Given initial the user data<"name, mobile">, and save<"1-1">
+    When execute the common http request<"getAccessToken">"获取accessToken"<"2-1">
+    Then verify the http response<"getAccessToken">"http数据校验"<"2-2">
+    When execute the common http request<"createMenu">"创建menu"<"3-1">
+    Then verify the http response<"createMenu">"http数据校验"<"3-2">

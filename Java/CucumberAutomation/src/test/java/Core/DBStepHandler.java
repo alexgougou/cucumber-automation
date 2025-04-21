@@ -154,7 +154,7 @@ public class DBStepHandler
         return DBUrl;
     }
 
-    public static void DBInit()
+    public static void DBDataInit()
     {
         getDBDetails();
         getDBAddress();
@@ -165,6 +165,14 @@ public class DBStepHandler
         getDBSID();
         buildDBUrl();
     }
+
+    public static void DBStepPerform()
+    {
+        DBDataInit();
+        replaceSQLParams();
+        executeDBDML();
+    }
+
 
     public static void replaceSQLParams()
     {

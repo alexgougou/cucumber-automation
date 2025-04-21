@@ -2,9 +2,12 @@ package Test;
 
 import Core.Utils.HttpResult;
 import Core.Utils.HttpUtil;
+import Core.Utils.MongoDBUtil;
 import Core.Utils.PrettyReport;
+import com.mongodb.client.model.Filters;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.bson.Document;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
@@ -121,6 +124,32 @@ public class TestLog
         System.out.println(requestParams);
         Map<String, Object> newParams = replaceAccordingJsonPath(requestParams, "$.button.[1].sub_button.[1].name", "zanzanz!");
         System.out.println(newParams);
+    }
+
+    @Test
+    public void mongoTest001() {
+        MongoDBUtil.getInstance().insertOne("UAT1", "demoTest001", "name", "alex");
+        Document doc = MongoDBUtil.getInstance().findOne("UAT1", "demoTest001", Filters.eq("name", "david"));
+        System.out.println(doc);
+    }
+
+
+
+    @Test
+    public void mongoTest003() {
+        Object value = MongoDBUtil.getInstance().findByKey("UAT1", "demoTest001", "age");
+        System.out.println(value);
+    }
+
+    @Test
+    public void mongoTest004() {
+        Object value = MongoDBUtil.getInstance().findOneByKey("UAT1", "demoTest001", "age");
+        System.out.println(value);
+    }
+
+    @Test
+    public void mongoTest005() {
+        MongoDBUtil.getInstance().updateOneByKey("UAT1", "demoTest001", "sex", "male");
     }
 
 

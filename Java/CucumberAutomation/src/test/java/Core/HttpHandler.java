@@ -2,6 +2,7 @@ package Core;
 
 import Core.Utils.HttpResult;
 import Core.Utils.HttpUtil;
+import Core.Utils.MongoDBUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Assertions;
@@ -17,6 +18,8 @@ import static Core.StepData.*;
 import static Core.Utils.Config.APIDir;
 import static Core.Utils.JsonUtil.*;
 import static Core.Utils.YamlUtil.getYamlMap;
+import static CucumberAutomation.Hooks.publicParams;
+import static CucumberAutomation.Hooks.scenarioData;
 
 public class HttpHandler
 {
@@ -37,7 +40,7 @@ public class HttpHandler
     public static Map<String, Object> requestUrlParams;
 
     public static Map<String, ReplaceRequestUrlParamsStrategy> replaceRequestUrlParamsStrategies =
-            Map.of("fromPublicParams", new ReplaceRequestUrlParamsInPublicParams(), "fromScenarioData", new ReplaceRequestUrlParamsInScenarioData());
+            Map.of("fromPublicParams", new ReplaceRequestUrlParamsInPublicParams(), "fromScenarioData", new ReplaceRequestUrlParamsInScenarioData(), "fromMongoDB", new ReplaceRequestUrlParamsInMongoDB());
     public static Map<String, ReplaceRequestParamsStrategy> replaceRequestParamsStrategies =
             Map.of("fromPublicParams", new ReplaceRequestParamsInPublicParams(), "fromScenarioData", new ReplaceRequestParamsInScenarioData());
     public static Map<String, SaveDataStrategy> saveDataStrategies =
@@ -156,7 +159,7 @@ public class HttpHandler
     /***
      * 读取request的参数，包括request的path，method，header，params，URLParams， 拼接url
      */
-    public static void requestInit()
+    public static void requestDataInit()
     {
         String APIFilePath = getAPIAbsolutePath(stepInfo);
         LinkedHashMap<String, Object> APIInfo = getAPIInfo(APIFilePath);
@@ -168,11 +171,15 @@ public class HttpHandler
         getRequestUrlParams(APIInfo);
     }
 
-    public static void setToken()
+    public static void httpStepPerform()
     {
-
+        requestDataInit();
+        replaceUrlParams();
+        replaceHeaders();
+        replaceRequestParams();
+        sendHttpRequest();
+        saveHttpResultData();
     }
-
 
 
     /***
@@ -199,6 +206,9 @@ public class HttpHandler
                     case "fromscenariodata":
                         replaceRequestUrlParamsStrategies.get("fromScenarioData").perform(requestUrlParams, key, dataSourceKey);
                         break;
+                    case "frommongodb":
+                        replaceRequestUrlParamsStrategies.get("fromMongoDB").perform(requestUrlParams, key, dataSourceKey);
+                        break;
                     default:
                 }
             }
@@ -207,6 +217,50 @@ public class HttpHandler
 
     }
 
+    public static void replaceHeaders()
+    {
+        if (needReplacedHeaders != null)
+        {
+            for (Map.Entry<String, Object> entry : needReplacedHeaders.entrySet())
+            {
+                String key = entry.getKey();
+                ArrayList<String> valueList = (ArrayList<String>) entry.getValue();
+                String replaceSource = valueList.get(0).toLowerCase();
+                String dataSourceKey = valueList.get(1);
+                if (key.equalsIgnoreCase("authorization"))
+                {
+                    //add token to header
+                    switch (replaceSource)
+                    {
+                        case "fromscenariodata":
+                            requestHeaders.put("Authorization", "Bearer " + scenarioData.get(dataSourceKey));
+                            break;
+                        case "frommongodb":
+                            requestHeaders.put("Authorization", "Bearer " + getValueInMongoDB(dataSourceKey));
+                            break;
+                        case "fromredis":
+                            //todo
+                            break;
+                        default:
+                    }
+                }
+                else
+                {
+                    switch (replaceSource)
+                    {
+                        case "frompublicparams":
+                            requestHeaders.put(key, (String) publicParams.get(dataSourceKey));
+                            break;
+                        case "fromscenariodata":
+                            requestHeaders.put(key, (String) scenarioData.get(dataSourceKey));
+                            break;
+                        default:
+                    }
+                }
+            }
+
+        }
+    }
 
 
     public static void replaceRequestParams()

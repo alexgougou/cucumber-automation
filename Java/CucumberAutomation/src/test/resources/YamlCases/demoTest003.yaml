@@ -16,8 +16,7 @@ getAccessToken:
     corpid1: ["fromPublicParams", "corpid1", "$.corpid"]    ##第一个参数为替换地址；第二个参数为替换地址中字段的名称；第三个参数为替换的字段在接口参数中的jsonPath表达式
     corpsecret1: ["fromPublicParams", "corpsecret1", "$.corpsecret"]
   SaveData:
-    access_token: ["saveToMongoDB", "access_token1", "$.access_token"]  ##第一个参数为保存地址；第二个参数为保存地址中字段的名称；第三个参数为要保存的字段在接口参数中的jsonPath表达式
-#    access_token: [ "saveToScenarioData", "access_token1", "$.access_token" ]  ##第一个参数为保存地址；第二个参数为保存地址中字段的名称；第三个参数为要保存的字段在接口参数中的jsonPath表达式
+    access_token: ["saveToScenarioData", "access_token1", "$.access_token"]  ##第一个参数为保存地址；第二个参数为保存地址中字段的名称；第三个参数为要保存的字段在接口参数中的jsonPath表达式
   Verify:
     statusCode: 200
     errcode: ["$.errcode", "Int", "0"]
@@ -27,9 +26,10 @@ getAccessToken:
 createMenu:
   APIFile: WeCom/ApplicationManagement/createMenu
   replaceUrlParams:
-    access_token: ["fromMongoDB", "access_token1"]  ##第一个参数为替换地址；第二个参数为替换地址中key的名称
-#    access_token: [ "fromScenarioData", "access_token1" ]  ##第一个参数为替换地址；第二个参数为替换地址中key的名称
+    access_token: ["fromScenarioData", "access_token1"]  ##第一个参数为替换地址；第二个参数为替换地址中key的名称
     agentid: ["fromPublicParams", "agentid1"]
+  replaceHeaders:
+    Authorization: [ "fromScenarioData", "access_token1" ]  ##第一个参数为替换地址；第二个参数为替换地址中key的名称
   replaceParams:
     name1: ["fromPublicParams", "name1", "$.button.[1].sub_button.[0].name"]  ##第一个参数为替换地址；第二个参数为替换地址中字段的名称；第三个参数为替换的字段在接口参数中的jsonPath表达式
     url1: [ "fromPublicParams", "url1", "$.button.[1].sub_button.[0].url" ]  ##第一个参数为替换地址；第二个参数为替换地址中字段的名称；第三个参数为替换的字段在接口参数中的jsonPath表达式
@@ -40,26 +40,3 @@ createMenu:
     errcode: ["$.errcode", "Int", "0"]
 #    errmsg: ["$.errmsg", "regex", "not allow to access from your ip.*"]  ##第一个参数为字段在response body中的jsonPath表达式；第二个参数为比较方式（regex， int，double, bigDecimal. String）；第三个参数要比较的值
 
-#*****************************************************getMenu*****************************************************#
-getMenu:
-  APIFile: WeCom/ApplicationManagement/getMenu
-  replaceParams:
-    access_token: ["fromScenarioData", "access_token1", "$.access_token"]
-    agentid: ["fromPublicParams", "agentid1", "$.agentid"]
-  SaveData:
-  Verify:
-    statusCode: 200
-    errcode: ["$.errcode", "Int", "0"]
-    name1: [ "$.button.[1].sub_button.[0].name", "string", "百度一下" ]
-    name2: [ "$.button.[1].sub_button.[1].name", "string", "赞！！！" ]
-
-#*****************************************************deleteMenu*****************************************************#
-deleteMenu:
-  APIFile: WeCom/ApplicationManagement/deleteMenu
-  replaceParams:
-    access_token: ["fromScenarioData", "access_token1", "$.access_token"]
-    agentid: ["fromPublicParams", "agentid1", "$.agentid"]
-  SaveData:
-  Verify:
-    statusCode: 200
-    errcode: ["$.errcode", "Int", "0"]

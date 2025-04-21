@@ -19,6 +19,8 @@ public class Hooks
     public Scenario scenario;
     public String scenarioName;
     public ArrayList<String> scenarioTags;
+    public static String caseInfoName;
+
     public static ArrayList<Status> stepStatus;
 
     public static LinkedHashMap<String, Object> scenarioData;
@@ -35,8 +37,8 @@ public class Hooks
         {
             if (tag.startsWith("@CASE_INFO"))
             {
-                String caseConfigName = RegexUtil.extractContentInBrackets(tag);
-                String scenarioPath = scenarioDir + caseConfigName + ".yaml";
+                caseInfoName = RegexUtil.extractContentInBrackets(tag);
+                String scenarioPath = scenarioDir + caseInfoName + ".yaml";
                 scenarioData = getYamlMap(scenarioPath);
             }
         }

@@ -47,11 +47,7 @@ public class APIStepDefinitions
     {
         getStepStatus(stepIndex);
         httpStepInit(stepName);
-        requestInit();
-        replaceUrlParams();
-        replaceRequestParams();
-        sendHttpRequest();
-        saveHttpResultData();
+        httpStepPerform();
     }
 
     @Then("verify the http response<{string}>{string}<{string}>")
@@ -66,9 +62,7 @@ public class APIStepDefinitions
     {
         getStepStatus(stepIndex);
         DBStepInit(stepName);
-        DBInit();
-        replaceSQLParams();
-        executeDBDML();
+        DBStepPerform();
         verifyDBResult();
 
     }

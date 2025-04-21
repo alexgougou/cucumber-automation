@@ -20,6 +20,13 @@ public  class Config
     public static final int DB_POOL_MAX_IDLE = 5;
     public static final long DB_POOL_MAX_WAIT = 60000;
 
+
+    //mongoDB pool config
+    public static final int MONGODB_MAX_SIZE = 20;
+    public static final int MONGODB_MIN_SIZE = 5;
+    public static final int MONGODB_CONNECTING= 100;
+    public static final long MONGODB_MAX_WAIT_TIME = 5000;
+
     //http pool config
     public static final int HTTP_POOL_MAX_TOTAL = 100;
     public static final int HTTP_POOL_PER_ROUTE_MAX_SIZE = 200;

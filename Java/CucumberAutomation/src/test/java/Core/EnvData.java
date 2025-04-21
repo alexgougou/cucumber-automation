@@ -1,26 +1,30 @@
 package Core;
 
-import Core.Utils.YamlTool;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.io.IOException;
 import java.util.Map;
 
-import static Core.StepData.stepInfo;
 import static Core.Utils.Config.envPath;
-import static Core.Utils.JsonUtil.getMapValueByLowerCase;
 import static Core.Utils.YamlUtil.getYamlMap;
 
 public class EnvData
 {
 
     private static final Logger logger = LogManager.getLogger(EnvData.class);
+    public static Map<String, Object> envInfo;
 
     public static Map<String, Object> ServerInfo;
 
+    public static Map<String, Object> mongoDBInfo;
+
+    public static String mongoDBAddress;
+    public static String mongoDBDataBaseName;
+
+    public static String mongoDBUserName;
+    public static String mongoDBPassword;
+
     public static String serverAddress;
-    public static Map<String, Object> envInfo;
+
 
     private EnvData()
     {
@@ -28,6 +32,11 @@ public class EnvData
         envInfo = getYamlMap(envPath);
         getServerInfo();
         getServerAddress();
+        getmongoDBInfo();
+        getMongoDBAddress();
+        getMongoDBDataBaseName();
+        getMongoDBUserName();
+        getMongoDBPassword();
     }
 
     private volatile static EnvData instance;
@@ -65,4 +74,59 @@ public class EnvData
         }
         return serverAddress;
     }
+
+    public Map<String, Object> getmongoDBInfo() {
+        if (envInfo.containsKey("MongoDB"))
+        {
+            mongoDBInfo = (Map<String, Object>) envInfo.get("MongoDB");
+        }
+        return mongoDBInfo;
+    }
+
+
+    public String getMongoDBAddress() {
+        try
+        {
+            mongoDBAddress = (String) mongoDBInfo.get("address");
+            return mongoDBAddress;
+        } catch (Exception  e) {
+            logger.error("get mongoDB address failed", e);
+        }
+        return mongoDBAddress;
+    }
+
+    public String getMongoDBDataBaseName() {
+        try
+        {
+            mongoDBDataBaseName = (String) mongoDBInfo.get("dataBaseName");
+            return mongoDBDataBaseName;
+        } catch (Exception  e) {
+            logger.error("get mongoDB data base name failed", e);
+        }
+        return mongoDBDataBaseName;
+    }
+
+    public String getMongoDBUserName() {
+        try
+        {
+            mongoDBUserName = (String) mongoDBInfo.get("userName");
+            return mongoDBUserName;
+        } catch (Exception  e) {
+            logger.error("get mongoDB user name failed", e);
+        }
+        return mongoDBUserName;
+    }
+
+    public String getMongoDBPassword() {
+        try
+        {
+            mongoDBPassword = (String) mongoDBInfo.get("password");
+            return mongoDBPassword;
+        } catch (Exception  e) {
+            logger.error("get mongoDB password failed", e);
+        }
+        return mongoDBPassword;
+    }
+
+
 }

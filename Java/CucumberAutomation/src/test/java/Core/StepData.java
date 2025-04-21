@@ -1,12 +1,12 @@
 package Core;
 
+import Core.Utils.MongoDBUtil;
 import io.cucumber.java.Status;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.jupiter.api.Assertions;
-
 import java.util.Map;
 
+import static Core.EnvData.mongoDBDataBaseName;
 import static CucumberAutomation.Hooks.*;
 
 
@@ -14,7 +14,7 @@ public class StepData
 {
     public static Map<String, Object> stepInfo;
     public static String DBName;
-
+    public static Map<String, Object> needReplacedHeaders;    //caseInfo 中replaceHeaders下的参数
 
     public static Map<String, Object> needReplacedParams;    //caseInfo 中replaceParams下的参数
 
@@ -98,6 +98,16 @@ public class StepData
         return needReplacedUrlParams;
     }
 
+    public static Map<String, Object> getNeedReplacedHeaders()
+    {
+
+        if (stepInfo.containsKey("replaceHeaders"))
+        {
+            needReplacedHeaders = (Map<String, Object>) stepInfo.get("replaceHeaders");
+        }
+        return needReplacedHeaders;
+    }
+
     public static String getSQLStatement()
     {
 
@@ -149,7 +159,7 @@ public class StepData
         getVerifyData();
         getReplaceParams();
         getReplaceUrlParams();
-
+        getNeedReplacedHeaders();
     }
 
     public static void DBStepInit(String stepName)
@@ -160,5 +170,15 @@ public class StepData
         getSQLStatement();
         getSaveData();
         getVerifyData();
+    }
+
+    public static void saveToMongoDB(String key, Object value)
+    {
+        MongoDBUtil.getInstance().updateOneByKey(mongoDBDataBaseName, caseInfoName, key, value);
+    }
+
+    public static Object getValueInMongoDB(String key)
+    {
+       return MongoDBUtil.getInstance().findOneByKey(mongoDBDataBaseName, caseInfoName, key);
     }
 }
