@@ -33,7 +33,7 @@ public class StepData
         if (stepStatus != null || stepStatus.get(stepStatus.size() - 1) != Status.FAILED)
         {
             logger.info("last step is passed, start to next step");
-            logger.info("***************************************step index:{}***************************************", stepIndex);
+            logger.info("***************************************************************step index:{}***************************************************************", stepIndex);
         }
     }
 

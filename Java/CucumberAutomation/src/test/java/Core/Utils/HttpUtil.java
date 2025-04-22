@@ -209,38 +209,62 @@ public class HttpUtil
      */
     public HttpResult executeRequest(HttpClient httpClient, HttpUriRequestBase httpUriRequestBase)
     {
-        CloseableHttpResponse response = null;
+        HttpResult httpResult;
         try
         {
-            response = (CloseableHttpResponse) httpClient.execute(httpUriRequestBase);
-            HttpEntity entity = response.getEntity();
-            Header[] responseHeaders = response.getHeaders();
-            String headersString = JsonUtil.headers2Json(responseHeaders);
-            logger.info("response headers:\n{}", headersString);
-            String data = EntityUtils.toString(entity, CHAR_SET);
-            logger.info("response content:\n {}", JsonUtil.prettyJson(data));
-            EntityUtils.consume(entity);
-            return new HttpResult(response.getCode(), data, response.getHeaders());
+            httpResult = httpClient.execute(httpUriRequestBase, response ->
+            {
+                int codeStatus = response.getCode();
+                HttpEntity entity = response.getEntity();
+                Header[] responseHeaders = response.getHeaders();
+                String headersString = JsonUtil.headers2Json(responseHeaders);
+                logger.info("response headers:\n{}", headersString);
+                String data = EntityUtils.toString(entity, CHAR_SET);
+                logger.info("response content:\n {}", JsonUtil.prettyJson(data));
+                EntityUtils.consume(entity);
+                return new HttpResult(codeStatus, data, responseHeaders);
+            });
         }
-        catch (IOException | ParseException e)
+        catch (Exception e)
         {
             logger.error("execute request failed", e);
             return new HttpResult(-1);
         }
-        finally
-        {
-            try
-            {
-                if (response != null)
-                {
-                    response.close();
-                }
-            }
-            catch (Exception e)
-            {
-                logger.error("close response failed:", e);
-            }
-        }
+        return httpResult;
+
+
+//        CloseableHttpResponse response = null;
+//        try
+//        {
+//            response = (CloseableHttpResponse) httpClient.execute(httpUriRequestBase);
+//            HttpEntity entity = response.getEntity();
+//            Header[] responseHeaders = response.getHeaders();
+//            String headersString = JsonUtil.headers2Json(responseHeaders);
+//            logger.info("response headers:\n{}", headersString);
+//            String data = EntityUtils.toString(entity, CHAR_SET);
+//            logger.info("response content:\n {}", JsonUtil.prettyJson(data));
+//            EntityUtils.consume(entity);
+//            return new HttpResult(response.getCode(), data, response.getHeaders());
+//        }
+//        catch (IOException | ParseException e)
+//        {
+//            logger.error("execute request failed", e);
+//            return new HttpResult(-1);
+//        }
+//        finally
+//        {
+//            try
+//            {
+//                if (response != null)
+//                {
+//                    response.close();
+//                }
+//            }
+//            catch (Exception e)
+//            {
+//                logger.error("close response failed:", e);
+//            }
+//        }
 
     }
 
