@@ -4,12 +4,14 @@ import Core.Utils.*;
 import com.jayway.jsonpath.JsonPath;
 import org.apache.hc.core5.http.Header;
 import org.junit.jupiter.api.Test;
+
 import java.io.*;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import static Core.Utils.YamlTool.*;
 
 public class TestYaml
@@ -21,13 +23,18 @@ public class TestYaml
         LoggerUtil.configInit();
         LoggerUtil.info("ddddddd");
     }
+
     @Test
-    public void yamlToJson(){
-        try {
+    public void yamlToJson()
+    {
+        try
+        {
             String yamlPath = "/Users/alex/Documents/MyProject/Java/CucumberAutomation/src/test/resources/YamlCases/The example2.yaml";
             String json = convertYamlToJson(yamlPath);
             System.out.println(json);
-        } catch (IOException e) {
+        }
+        catch (IOException e)
+        {
             System.out.println("fail to convert yaml file");
         }
     }
@@ -60,24 +67,36 @@ public class TestYaml
     public void readYamlValueTest2() throws IOException
     {
         String yamlPath = "/Users/alex/Documents/MyProject/Java/CucumberAutomation/src/test/resources/YamlCases/Test001.yaml";
-        Object value = YamlUtil.getValueByKey(yamlPath, "Step1","password");
+        Object value = YamlUtil.getValueByKey(yamlPath, "Step1", "password");
         System.out.println(value);
     }
 
     @Test
-    public void randomUser() {
-        String mobile = GenerateUserInfo.genPhoneNum();
-        String email = GenerateUserInfo.genEmail();
-        String sex = GenerateUserInfo.genSex();
-        String name = GenerateUserInfo.genChineseName(sex);
-        String idNo = GenerateUserInfo.generateIDCard(20, 50, sex);
-        System.out.println("sex: " + sex);
-        System.out.println("name: " + name);
-        System.out.println("mobile: " + mobile);
-        System.out.println("email: " +email);
-        System.out.println("idNO: " + idNo);
+    public void randomUser()
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            String mobile = GenerateUserInfo.genPhoneNum();
+            String email = GenerateUserInfo.genEmail();
+            String sex = GenerateUserInfo.genSex();
+            String name = GenerateUserInfo.genChineseName(sex);
+            String idNo = GenerateUserInfo.generateIDCard(20, 50, sex);
+            System.out.println("sex: " + sex);
+            System.out.println("name: " + name);
+            System.out.println("mobile: " + mobile);
+            System.out.println("email: " + email);
+            System.out.println("idNO: " + idNo);
+            System.out.println("********************************************");
+        }
 
     }
+
+    @Test
+    public void test000022() {
+        String sequence = GenerateUserInfo.generateSequence("男");
+        System.out.println(sequence);
+    }
+
     @Test
     public void dbResult() throws SQLException
     {
@@ -86,7 +105,7 @@ public class TestYaml
         String dbPass = "12345678";
         Connection con = DBUtil.getConnection(uri, dbName, dbPass);
         String sql1 = "Select * from Student;";
-        List<Map<String, Object>> resultList = DBUtil.executeQuery(con,sql1);
+        List<Map<String, Object>> resultList = DBUtil.executeQuery(con, sql1);
         System.out.println(resultList.isEmpty());
         resultList.forEach(System.out::println);
         Connection con2 = DBUtil.getConnection(uri, dbName, dbPass);
@@ -103,7 +122,8 @@ public class TestYaml
         String url = "https://api.uomg.com/api/rand.qinghua";
         HttpResult httpResult = HttpUtil.getInstance().doGet(url);
         System.out.println(httpResult.getCode());
-        for (Header header:httpResult.getHeaders()) {
+        for (Header header : httpResult.getHeaders())
+        {
             System.out.println(header);
         }
         System.out.println(httpResult.getContent());

@@ -99,8 +99,8 @@ public class HttpUtil
 
     /***
      * 设置请求头
-     * @param headers
-     * @param httpUriRequestBase
+     * @param headers 请求头
+     * @param httpUriRequestBase httpclient的基础类，如httpget
      */
     public static void replaceHeaders(Map<String, String> headers, HttpUriRequestBase httpUriRequestBase)
     {
@@ -116,7 +116,7 @@ public class HttpUtil
 
     /***
      * 设置json格式请求的请求头
-     * @param httpUriRequestBase
+     * @param httpUriRequestBase httpclient的基础类，如httpget
      */
     public static void setJsonHeader(HttpUriRequestBase httpUriRequestBase)
     {
@@ -131,7 +131,7 @@ public class HttpUtil
     /***
      * 设置请求的body
      * @param body 可以是json字符串，也可以是xml字符串
-     * @param httpUriRequestBase
+     * @param httpUriRequestBase httpclient的基础类，如httpget
      */
     public static void setRequestBody(String body, HttpUriRequestBase httpUriRequestBase)
     {
@@ -141,13 +141,12 @@ public class HttpUtil
 
     /***
      * 替换url中参数，如https://qyapi.weixin.qq.com/cgi-bin/menu/create?access_token=ACCESS_TOKEN&agentid=AGENTID
-     * @param url
-     * @param params
-     * @return
+     * @param url url
+     * @param params URL中的参数
      */
     public URIBuilder replaceUrlParam(String url, Map<String, Object> params)
     {
-        URIBuilder uriBuilder = null;
+        URIBuilder uriBuilder;
         try
         {
             uriBuilder = new URIBuilder(url);
@@ -171,7 +170,7 @@ public class HttpUtil
     {
         //替换url参数
         URIBuilder uriBuilder = replaceUrlParam(url, params);
-        URI sendUrl = null;
+        URI sendUrl;
         try
         {
             sendUrl = uriBuilder.build();
@@ -186,8 +185,8 @@ public class HttpUtil
 
     /***
      * 设置post请求的body参数
-     * @param params
-     * @param httpUriRequestBase
+     * @param params post请求中的参数
+     * @param httpUriRequestBase httpclient的基础类，如httpget
      */
     public void replacePostParam(Map<String, Object> params, HttpUriRequestBase httpUriRequestBase)
     {
@@ -205,9 +204,8 @@ public class HttpUtil
 
     /***
      * send request and obtain http response
-     * @param httpClient
-     * @param httpUriRequestBase
-     * @return
+     * @param httpClient httpclient
+     * @param httpUriRequestBase httpclient的基础类，如httpget
      */
     public HttpResult executeRequest(HttpClient httpClient, HttpUriRequestBase httpUriRequestBase)
     {
@@ -226,7 +224,7 @@ public class HttpUtil
         }
         catch (IOException | ParseException e)
         {
-            e.printStackTrace();
+            logger.error("execute request failed", e);
             return new HttpResult(-1);
         }
         finally
@@ -248,9 +246,7 @@ public class HttpUtil
 
     /***
      * 不带请求头和请求参数
-     * @param url
-     * @return
-     * @throws Exception
+     * @param url url
      */
     public HttpResult doGet(String url)
     {
@@ -259,10 +255,8 @@ public class HttpUtil
 
     /***
      * 带参数，不带请求头
-     * @param url
-     * @param params
-     * @return
-     * @throws Exception
+     * @param url url
+     * @param params get请求的承诺书
      */
     public HttpResult doGet(String url, Map<String, Object> params)
     {
@@ -271,11 +265,9 @@ public class HttpUtil
 
     /***
      * 带请求头和请求参数
-     * @param url
-     * @param headers
-     * @param params
-     * @return
-     * @throws Exception
+     * @param url url
+     * @param headers 请求头参数
+     * @param params get请求参数
      */
     public HttpResult doGet(String url, Map<String, String> headers, Map<String, Object> params)
     {
@@ -297,10 +289,7 @@ public class HttpUtil
 
     /***
      *
-     * @param url
-     * @return
-     * @throws URISyntaxException
-     * @throws IOException
+     * @param url url
      */
     public HttpResult doPost(String url)
     {
@@ -309,11 +298,8 @@ public class HttpUtil
 
     /***
      *
-     * @param url
-     * @param params
-     * @return
-     * @throws URISyntaxException
-     * @throws IOException
+     * @param url url
+     * @param params post请求参数
      */
     public HttpResult doPost(String url, Map<String, Object> params)
     {
@@ -322,13 +308,10 @@ public class HttpUtil
 
     /***
      *
-     * @param url
-     * @param headers
+     * @param url url
+     * @param headers header参数
      * @param urlParams url中需要替换的参数
      * @param bodyParams 请求body中的参数
-     * @return
-     * @throws URISyntaxException
-     * @throws IOException
      */
 
     public HttpResult doPost(String url, Map<String, String> headers, Map<String, Object> urlParams, Map<String, Object> bodyParams)
@@ -352,9 +335,8 @@ public class HttpUtil
 
     /***
      *
-     * @param url
-     * @param json
-     * @return
+     * @param url url
+     * @param json json参数
      */
     public HttpResult postJson(String url, String json)
     {
@@ -363,10 +345,9 @@ public class HttpUtil
 
     /***
      *
-     * @param url
-     * @param headers
-     * @param json
-     * @return
+     * @param url url
+     * @param headers 请求头参数
+     * @param json body中的json参数
      */
     public HttpResult postJson(String url, Map<String, String> headers, String json)
     {
@@ -375,11 +356,10 @@ public class HttpUtil
 
     /***
      *
-     * @param url
-     * @param headers
-     * @param urlParams
-     * @param json
-     * @return
+     * @param url url
+     * @param headers header参数
+     * @param urlParams url中的参数
+     * @param json body中的json参数
      */
     public HttpResult postJson(String url, Map<String, String> headers, Map<String, Object> urlParams, String json)
     {
@@ -414,11 +394,10 @@ public class HttpUtil
 
     /***
      *
-     * @param url
-     * @param headers
-     * @param urlParams
-     * @param xml
-     * @return
+     * @param url url
+     * @param headers header参数
+     * @param urlParams url参数
+     * @param xml body中的xml参数
      */
     public HttpResult postXml(String url, Map<String, String> headers, Map<String, Object> urlParams, String xml)
     {
@@ -441,11 +420,10 @@ public class HttpUtil
 
     /***
      * get请求下载文件
-     * @param url
-     * @param headers
-     * @param params
+     * @param url url
+     * @param headers header参数
+     * @param params get请求参数
      * @param localPath 本地文件路径
-     * @return
      */
     public HttpResult downloadFile(String url, Map<String, String> headers, Map<String, Object> params, String localPath)
     {
@@ -470,7 +448,7 @@ public class HttpUtil
             long length = entity.getContentLength();
             is = entity.getContent();
             byte[] buffer = new byte[4096];
-            int read = 0;
+            int read;
             while ((read = is.read(buffer)) > 0)
             {
                 bos.write(buffer, 0, read);
@@ -484,7 +462,7 @@ public class HttpUtil
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            logger.error("download file failed", e);
             return new HttpResult(-1);
         }
         finally
@@ -495,7 +473,7 @@ public class HttpUtil
             }
             catch (Exception e)
             {
-                e.printStackTrace();
+                logger.error("close response failed", e);
             }
             try
             {
@@ -503,7 +481,7 @@ public class HttpUtil
             }
             catch (Exception e)
             {
-                e.printStackTrace();
+                logger.error("close ByteArrayOutputStream failed", e);
             }
             try
             {
@@ -511,7 +489,7 @@ public class HttpUtil
             }
             catch (Exception e)
             {
-                e.printStackTrace();
+                logger.error("close FileOutputStream failed", e);
             }
 
             try
@@ -520,17 +498,15 @@ public class HttpUtil
             }
             catch (Exception e)
             {
-                e.printStackTrace();
+                logger.error("close InputStream failed", e);
             }
         }
     }
 
     /***
-     *
-     * @param url
+     * @param url url
      * @param inputStream 文件流
      * @param fileName 原始文件名
-     * @return
      */
     public HttpResult uploadFile(String url, InputStream inputStream, String fileName)
     {
